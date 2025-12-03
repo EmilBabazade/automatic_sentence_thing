@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sentence → Cloze → TSV</title>
+</head>
+<body>
+  <h1>Sentence → Cloze → TSV</h1>
+
+  <label>
+    Norwegian:
+    <input id="norsk" type="text" style="width: 400px;">
+  </label>
+  <br><br>
+
+  <label>
+    English:
+    <input id="english" type="text" style="width: 400px;">
+  </label>
+  <br><br>
+
+  <label>
+    Tag:
+    <input id="tag" type="text" style="width: 200px;">
+  </label>
+  <br><br>
+
+  <button id="addBtn">Add sentence</button>
+  <button id="clearBtn">Clear all</button>
+  <button id="downloadBtn">Download TSV</button>
+
+  <h3>Preview</h3>
+  <textarea id="preview" rows="15" cols="80" readonly></textarea>
+
+  <script src="app.js"></script>
+</body>
+</html>
