@@ -3,46 +3,28 @@
 const allRows = [];
 
 document.addEventListener('DOMContentLoaded', () => {
-  const norskInput   = document.getElementById('norsk');
-  const englishInput = document.getElementById('english');
-  const tagInput     = document.getElementById('tag');
-  const previewBox   = document.getElementById('preview');
+  const fileInput   = document.getElementById('tsvFile');
+  const previewBox  = document.getElementById('preview');
 
-  const addBtn      = document.getElementById('addBtn');
   const clearBtn    = document.getElementById('clearBtn');
   const downloadBtn = document.getElementById('downloadBtn');
 
-  addBtn.addEventListener('click', () => {
-    const norskRaw   = norskInput.value;
-    const englishRaw = englishInput.value;
-    const tagRaw     = tagInput.value;
+  fileInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
 
-    if (!norskRaw.trim() || !englishRaw.trim()) {
-      alert('Need both Norwegian and English.');
-      return;
-    }
-
-    // Clean spaces
-    const norsk   = String(norskRaw).trim().replace(/\s+/g, ' ');
-    const english = String(englishRaw).trim().replace(/\s+/g, ' ');
-    const tag     = String(tagRaw).trim();
-
-    const rowsForSentence = genClozeRows(norsk, english, tag);
-    for (const r of rowsForSentence) {
-      allRows.push(r);
-    }
-
-    updatePreview(previewBox);
-
-    // Optional: clear Norwegian/English but keep tag for next sentence
-    norskInput.value = '';
-    englishInput.value = '';
-    norskInput.focus();
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const text = ev.target.result;
+      loadTsvAndGenerateRows(text, previewBox);
+    };
+    reader.readAsText(file, 'utf-8');
   });
 
   clearBtn.addEventListener('click', () => {
     allRows.length = 0;
-    updatePreview(previewBox);
+    previewBox.value = '';
+    fileInput.value = '';
   });
 
   downloadBtn.addEventListener('click', () => {
@@ -55,6 +37,38 @@ document.addEventListener('DOMContentLoaded', () => {
     downloadTextFile(tsv, 'sentences.tsv');
   });
 });
+
+/**
+ * Parse TSV text (Norwegian \t English [\t tag?])
+ * and generate cloze rows for each line.
+ */
+function loadTsvAndGenerateRows(tsvText, previewBox) {
+  allRows.length = 0; // reset previous session
+
+  const lines = tsvText.split(/\r?\n/);
+  for (const line of lines) {
+    if (!line.trim()) continue; // skip empty lines
+
+    const cols = line.split('\t');
+    if (cols.length < 2) continue; // need at least norsk + english
+
+    const norskRaw   = cols[0];
+    const englishRaw = cols[1];
+    const tagRaw     = cols[2] ?? '';
+
+    // Clean spaces
+    const norsk   = String(norskRaw).trim().replace(/\s+/g, ' ');
+    const english = String(englishRaw).trim().replace(/\s+/g, ' ');
+    const tag     = String(tagRaw).trim();
+
+    const rowsForSentence = genClozeRows(norsk, english, tag);
+    for (const r of rowsForSentence) {
+      allRows.push(r);
+    }
+  }
+
+  updatePreview(previewBox);
+}
 
 /**
  * Generates rows like your GEN_CLOZE:

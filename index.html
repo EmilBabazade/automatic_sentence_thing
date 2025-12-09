@@ -2,30 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Sentence → Cloze → TSV</title>
+  <title>TSV → Cloze → TSV</title>
 </head>
 <body>
-  <h1>Sentence → Cloze → TSV</h1>
+  <h1>TSV → Cloze → TSV</h1>
 
-  <label>
-    Norwegian:
-    <input id="norsk" type="text" style="width: 400px;">
-  </label>
+  <p>Upload a TSV file with columns: <b>Norwegian</b> &nbsp;TAB&nbsp; <b>English</b> &nbsp;[TAB&nbsp;<b>Tag</b> optional]</p>
+
+  <input id="tsvFile" type="file" accept=".tsv,.txt">
   <br><br>
 
-  <label>
-    English:
-    <input id="english" type="text" style="width: 400px;">
-  </label>
-  <br><br>
-
-  <label>
-    Tag:
-    <input id="tag" type="text" style="width: 200px;">
-  </label>
-  <br><br>
-
-  <button id="addBtn">Add sentence</button>
   <button id="clearBtn">Clear all</button>
   <button id="downloadBtn">Download TSV</button>
 
